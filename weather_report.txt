@@ -1,0 +1,112 @@
+Weather Report for Karachi:
+Description: haze
+Temperature: 14.90 degrees Celsius
+Humidity: 58.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 01:23:08 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: haze
+Temperature: 13.90 degrees Celsius
+Humidity: 62.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 02:23:08 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 13.90 degrees Celsius
+Humidity: 62.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 03:23:09 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 12.90 degrees Celsius
+Humidity: 62.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 04:23:09 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 12.90 degrees Celsius
+Humidity: 67.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 05:23:09 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 14.90 degrees Celsius
+Humidity: 58.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 06:23:10 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 14.90 degrees Celsius
+Humidity: 58.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 07:23:10 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 15.90 degrees Celsius
+Humidity: 59.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 08:23:10 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 16.90 degrees Celsius
+Humidity: 55.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 09:23:10 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: smoke
+Temperature: 18.90 degrees Celsius
+Humidity: 48.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 10:23:11 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: haze
+Temperature: 20.90 degrees Celsius
+Humidity: 43.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 11:23:11 2024
+
+No anomaly detected.
+Weather Report for Karachi:
+Description: haze
+Temperature: 22.90 degrees Celsius
+Humidity: 33.00%
+
+Additional Comments: Weather conditions are generally normal. Enjoy your day!
+Date and Time: Sun Jan  7 12:23:11 2024
+
+No anomaly detected.
+
+24 Hours Report:
+Average Temperature: 16.15 degrees Celsius
+Average Humidity: 55.4167%
