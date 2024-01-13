@@ -224,3 +224,77 @@ void sendEmail(const struct WeatherInfo *info) {
         curl_easy_cleanup(curl);
     }
 }
+//main code
+
+int main(void) {
+    CURL *curl;
+    CURLcode res;
+
+    struct WeatherInfo weatherInfo;  // Declare weatherInfo here
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl = curl_easy_init();
+
+    if (curl) {
+        struct MemoryStruct chunk;
+        chunk.memory = malloc(1);
+        chunk.size = 0;
+
+        char city_name[] = "Karachi";
+
+        char request_url[512];
+        snprintf(request_url, sizeof(request_url), "%s%s&appid=%s", API_URL, city_name, API_KEY);
+
+        curl_easy_setopt(curl, CURLOPT_URL, request_url);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        } else {
+            FILE *rawFile = fopen("raw_data.txt", "w");
+            if (rawFile != NULL) {
+                fprintf(rawFile, "%s", chunk.memory);
+                fclose(rawFile);
+                printf("Raw data saved to 'raw_data.txt'\n");
+            } else {
+                printf("Error opening file for raw data\n");
+            }
+
+            parseWeatherInfo(chunk.memory, &weatherInfo);
+
+            int isAnomaly = detectTemperatureAnomaly(weatherInfo.temperature);
+
+            printf("\nProcessed Weather Information:\n");
+            printf("Weather in %s: %s\n", city_name, weatherInfo.description);
+            printf("Temperature: %.2f degrees Celsius\n", weatherInfo.temperature - 273.15);
+            printf("Humidity: %.2f%%\n", weatherInfo.humidity);
+
+            if (isAnomaly) {
+                printf("\nTemperature anomaly detected!\n");
+            } else {
+                printf("\nNo temperature anomaly detected.\n");
+            }
+
+            generateReport(city_name, &weatherInfo, isAnomaly);
+            generateProcessedData(city_name, &weatherInfo, isAnomaly);
+
+            // Set up the alarm for real-time alerts
+            setupAlarm(&weatherInfo);
+        }
+
+        free(chunk.memory);
+        curl_easy_cleanup(curl);
+    }
+
+    curl_global_cleanup();
+
+    // Keep the program running to handle real-time alerts
+    while (1) {
+        sleep(1);
+    }
+
+    return 0;
+}
