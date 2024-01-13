@@ -93,3 +93,134 @@ static const char *generateComments(const struct WeatherInfo *info) {
         return "Weather conditions are generally normal. Enjoy your day!";
     }
 }
+
+// Function to generate and save a report with comments
+static void generateReport(const char *city, const struct WeatherInfo *info, int isAnomaly) {
+    FILE *reportFile = fopen("weather_report.txt", "a");
+
+    if (reportFile != NULL) {
+        time_t t;
+        struct tm *tm_info;
+
+        time(&t);
+        tm_info = localtime(&t);
+
+        fprintf(reportFile, "Weather Report for %s:\n", city);
+        fprintf(reportFile, "Description: %s\n", info->description);
+        fprintf(reportFile, "Temperature: %.2f degrees Celsius\n", info->temperature - 273.15);
+        fprintf(reportFile, "Humidity: %.2f%%\n", info->humidity);
+        const char *comments = generateComments(info);
+        fprintf(reportFile, "\nAdditional Comments: %s\n", comments);
+        fprintf(reportFile, "Date and Time: %s", asctime(tm_info));
+
+        if (isAnomaly) {
+            fprintf(reportFile, "\nAnomaly Detected: Temperature is outside the normal range.\n");
+        } else {
+            fprintf(reportFile, "\nNo anomaly detected.\n");
+        }
+
+        fclose(reportFile);
+        printf("Weather report appended. See 'weather_report.txt' for details.\n");
+    } else {
+        printf("Error opening file for the report\n");
+    }
+}
+
+// Function to generate and save processed data
+static void generateProcessedData(const char *city, const struct WeatherInfo *info, int isAnomaly) {
+    char processedFileName[256];
+    snprintf(processedFileName, sizeof(processedFileName), "processed_data_%s.txt", city);
+
+    FILE *processedFile = fopen(processedFileName, "a");
+
+    if (processedFile != NULL) {
+        time_t t;
+        struct tm *tm_info;
+
+        time(&t);
+        tm_info = localtime(&t);
+
+        fprintf(processedFile, "Processed Weather Information for %s:\n", city);
+        fprintf(processedFile, "Weather Description: %s\n", info->description);
+        fprintf(processedFile, "Temperature: %.2f degrees Celsius\n", info->temperature - 273.15);
+        fprintf(processedFile, "Humidity: %.2f%%\n", info->humidity);
+        fprintf(processedFile, "Date and Time: %s", asctime(tm_info));
+        fprintf(processedFile, "Anomaly Detection: %s\n", isAnomaly ? "Temperature anomaly detected!" : "No temperature anomaly detected.");
+        fclose(processedFile);
+        printf("Processed data appended. See '%s' for details.\n", processedFileName);
+    } else {
+        printf("Error opening file for processed data\n");
+    }
+}
+
+// Function to set up the alarm signal
+static void setupAlarm(struct WeatherInfo *weatherInfo) {
+    struct sigaction sa;
+    sa.sa_sigaction = generateAlerts;
+    sa.sa_flags = SA_SIGINFO;
+
+    sigaction(SIGALRM, &sa, NULL);
+    alarm(3600); // Set the alarm for 1 hour
+}
+
+// Function to generate real-time alerts
+static void generateAlerts(int signal, siginfo_t *info, void *context) {
+    struct WeatherInfo *weatherInfo = (struct WeatherInfo *)info->si_value.sival_ptr;
+    printf("\nChecking for real-time alerts...\n");
+
+    int alertTriggered = 1;  // Set based on your conditions
+    if (alertTriggered) {
+        // Notify relevant personnel by sending an email
+        sendEmail(weatherInfo);
+        printf("ALERT: Critical environmental conditions detected! Email sent.\n");
+    } else {
+        printf("No critical environmental conditions detected.\n");
+    }
+
+    // Set up the alarm for the next hour
+    alarm(3600);
+}
+
+// Function to send email using libcurl
+void sendEmail(const struct WeatherInfo *info) {
+    CURL *curl;
+    CURLcode res;
+
+    curl = curl_easy_init();
+
+    if (curl) {
+        const char *smtp_server = "smtps://smtp.gmail.com:465";
+        const char *smtp_user = "binnib786@gmail.com";
+        const char *smtp_password = "binnib123$";
+        const char *from_address = "binnib786@gmail.com";
+        const char *to_address = "konozrashid@gmail.com";  // Replace with the recipient's email
+
+        const char *subject = "ALERT: Critical Environmental Conditions Detected!";
+        char message[512];
+        snprintf(message, sizeof(message),
+                 "Temperature: %.2f degrees Celsius\nHumidity: %.2f%%\n\nAdditional Comments: %s",
+                 info->temperature - 273.15, info->humidity, generateComments(info));
+
+        curl_easy_setopt(curl, CURLOPT_URL, smtp_server);
+        curl_easy_setopt(curl, CURLOPT_USERNAME, smtp_user);
+        curl_easy_setopt(curl, CURLOPT_PASSWORD, smtp_password);
+        curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        curl_easy_setopt(curl, CURLOPT_MAIL_FROM, from_address);
+        struct curl_slist *recipients = NULL;
+        recipients = curl_slist_append(recipients, to_address);
+        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+        curl_easy_setopt(curl, CURLOPT_READDATA, message);
+        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        } else {
+            printf("Email sent successfully!\n");
+        }
+
+        curl_slist_free_all(recipients);
+        curl_easy_cleanup(curl);
+    }
+}
